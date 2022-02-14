@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using FlightCardApp.libs.domain;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using System;
 using System.Collections.Generic;
@@ -106,14 +107,27 @@ namespace FlightCardApp.Controllers
 
     public class HomeController : Controller
     {
-        private IConfiguration configuration1;
+        //private IConfiguration configuration1;
 
-        public HomeController(IConfiguration configuration)
+        public HomeController(/*IConfiguration configuration*/)
         {
-            configuration1 = configuration;
+            //configuration1 = configuration;
         }
         public IActionResult Index()
         {
+
+            var company = new Company(name: " Türk havayolları ", shortCode: " thy ");
+
+
+
+            company.SetShortCode("AND");
+            company.SetName("Türk Hava Yolları");
+
+            var flightPlaning = new FlightPlaning(DateTime.Now);
+            //flightPlaning.
+
+
+
             /*
             // tight coupling sıkı sıkıya bağlılık.
             Bank2Service b2 = new Bank2Service(new ABank());
