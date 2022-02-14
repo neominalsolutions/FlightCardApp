@@ -1,0 +1,21 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>net5.0</TargetFramework>
+    <CopyRefAssembliesToPublishDirectory>false</CopyRefAssembliesToPublishDirectory>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.AspNetCore.Mvc.Razor.RuntimeCompilation" Version="5.0.10" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="5.0.14" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="libs\domain\" />
+    <Folder Include="libs\infrasturcture\" />
+    <Folder Include="libs\application\" />
+    <Folder Include="libs\persistance\" />
+    <Folder Include="Models\" />
+  </ItemGroup>
+
+</Project>
