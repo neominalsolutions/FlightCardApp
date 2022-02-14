@@ -12,9 +12,7 @@
 
   <ItemGroup>
     <Folder Include="libs\domain\" />
-    <Folder Include="libs\infrasturcture\" />
     <Folder Include="libs\application\" />
-    <Folder Include="libs\persistance\" />
     <Folder Include="Models\" />
   </ItemGroup>
 

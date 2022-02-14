@@ -1,5 +1,7 @@
+using FlightCardApp.libs.core;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using System;
@@ -13,7 +15,9 @@ namespace FlightCardApp
     {
         public static void Main(string[] args)
         {
-            CreateHostBuilder(args).Build().Run();
+            IHost build = CreateHostBuilder(args).Build();
+            DomainEvent.Dispatcher = build.Services.GetRequiredService<IDomainEventDispatcher>();
+            build.Run();
         }
 
         public static IHostBuilder CreateHostBuilder(string[] args) =>
