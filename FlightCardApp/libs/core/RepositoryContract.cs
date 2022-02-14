@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 namespace FlightCardApp.libs.core
 {
 
-    public interface IRepository<TEntity> where TEntity : IAggregateRoot
+    public interface IRepository<TEntity> where TEntity : Entity, IAggregateRoot
     {
         TEntity Find(string key);
         IQueryable<TEntity> SelectWhere(Expression<Func<TEntity, bool>> lamda);
@@ -16,7 +16,7 @@ namespace FlightCardApp.libs.core
         void Add(TEntity entity);
         void Update(TEntity entity);
         void Remove(string key);
-        void Save();
+        bool Save(); // UnitOfWork yötemini kullanmak için Save diğer operasyonların içinden ayrılmıştır. Transaction Scope yönetebilir.
 
     }
 
@@ -54,7 +54,6 @@ namespace FlightCardApp.libs.core
             return _dbSet.Where(lambda).AsQueryable();
         }
 
-
         public virtual void Remove(string Id)
         {
             var entity = Find(Id);
@@ -66,9 +65,9 @@ namespace FlightCardApp.libs.core
             _dbSet.Update(entity);
         }
 
-        public virtual void Save()
+        public virtual bool  Save()
         {
-            _dbContext.SaveChanges();
+            return _dbContext.SaveChanges() > 0 ? true:false;
         }
 
         

@@ -17,6 +17,9 @@ namespace FlightCardApp
         {
             IHost build = CreateHostBuilder(args).Build();
             DomainEvent.Dispatcher = build.Services.GetRequiredService<IDomainEventDispatcher>();
+            // Yani burada DomainEvent.Dispatcher propertysine sistemdeki NetrCoreEventDispacther referansýný verdik. uygulama genelinde artýk bu referans ile çalýþacaðýz.
+
+            //DomainEvent.Raise<>(new test());
             build.Run();
         }
 

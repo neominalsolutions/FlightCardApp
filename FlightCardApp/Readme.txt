@@ -1,36 +1,33 @@
 ﻿FightPlaning  class
 ---------------------------
-Id:string GUID
-List<FlightTypePrices>;
-ConnectingFlight: boolean;
-Issuing Company : Company;
-FightDate: Datetime; 
-List<Flight> Details 
+Id:string GUID // Uçuş Planlama Id; 
+List<FlightTypePrices>; // Bussiness ve Economy Fiyatı
+ConnectingFlight: boolean; // Aktarmalı mı
+Issuing Company : Company; // Uçuş planlayan şirket
+FightDate: Datetime; // Uçuş tarihi 10.10.2022
+List<Flight> Details  // Uçuştaki tüm uçuş detayı burada olucak
 
 //Methods
 
 AddFlight(Flight f);
-Cancel(string description); // Kötü hava koşulları, Uçak Arızası, Pandemi vs...
+Cancel(string cancelationReason); // Kötü hava koşulları, Uçak Arızası, Pandemi vs...
+
+FlightCanceled Event
+cancelationReason
+fightPlaningId
 
 ----------------------
 
 Flight class
 ----------------------
 
-Flight Number : string; (Key)
-From : AirPort
-To: AirPort
-Company: Company
-DepartureTime: TimeSpan 
-ArrivalTime : TimeSpan
-FlightDate : DateTime
-
--------------------
-
-FlightPlaningFactory sınıfı aktarmalı ve aktarmasız uçuş oluşturur.
-
-ConnectionFlightCard
-DirectFlightCard
+Flight Number : string; (Key) Uçuş Numarası
+From : AirPort           Kalkacağı Havalimanı
+To: AirPort             Ineceği Havalimanı
+Company: Company        Hangi Şirkete ait bir uçuş olduğu
+DepartureTime: TimeSpan Kalkış zamanı
+ArrivalTime : TimeSpan  Varış zamanı
+FlightDate : DateTime   Uçuş Tarihi
 
 ------------------------------------------------
 
@@ -47,12 +44,13 @@ Total Time 2 saat 30 dakika
 Departure Time: 11:10
 Departure Date (string) 2 Mart Salı
 connectingFlightText (1 aktarmalı veya Direkt)
-ListPrice 1400 TL
+List<FlightPrice> FlightPrices;
 List<FlightDto>  FightDetails
 Arrival Time 14:25
 Departure Time 09:45
 Total Time: 10 saat 20 dk
 FromAirPort: İstanbul Hava Limanı
+ToAirPort: İzmir Adnan Menderes Hav Limanı
 
 --------------------------------------
 
@@ -65,12 +63,13 @@ FlightTicket // Son kullanıcının sistemden aldığı bilet
 
 TicketNumber
 NameOfPassenger: string (Mert Alptekin)
+IdentityNumber: (TC No)
 FlightNumber: string
 Class (Business, Economy) : enum
 Date (Uçuş Tarihi): DateTime
-Flight (Flight Number): string
 FlightPlaningId: string
 Status (Check-in, ReadyForCheck-in, Check-out, OpenTicket): Enum
+// Bilet durumu hakkında buradaki status değeri üzerinden bilet ile alakalı bilgi sahibi olacağız.
 
 CheckIn(); Bu işlem ile Ticket Boarding Pass’e dönüşür
 
@@ -101,4 +100,5 @@ Date         -> DateTime -> 10.10.2022
 
 Read();  Gişe görevlisi tarafından okutulan bilet checkout olarak işaretlenir. 
 
-Read işlemi sonrasında bilet onaylandıktan sonra "BoardingPassReaded" eventi fırlatılır ve FlightTicket CheckOut olarak işaretlenir.
+Read işlemi sonrasında bilet onaylandıktan sonra "BoardingPassReadedBoardingPassReaded" eventi fırlatılır ve FlightTicket CheckOut olarak işaretlenir.
+// Checkout işleminde ise biletimizi expire ediyoruz. Bu bilet artık kullanılmaz oluyor.

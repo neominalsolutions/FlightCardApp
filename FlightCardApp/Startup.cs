@@ -1,3 +1,5 @@
+using FlightCardApp.libs.core;
+using FlightCardApp.libs.infrasturcture;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
@@ -23,6 +25,12 @@ namespace FlightCardApp
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            // IOC Container
+
+            //services.AddScope
+
+            services.AddSingleton<IDomainEventDispatcher, NetCoreEventDispatcher>();
+            // Dispatcherlar performans amaçlý uygulama genelinde 1 kez instance alýnýr.
             services.AddControllersWithViews();
         }
 
