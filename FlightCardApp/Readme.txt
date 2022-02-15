@@ -6,11 +6,18 @@ ConnectingFlight: boolean; // Aktarmalı mı
 Issuing Company : Company; // Uçuş planlayan şirket
 FightDate: Datetime; // Uçuş tarihi 10.10.2022
 List<Flight> Details  // Uçuştaki tüm uçuş detayı burada olucak
-
+Status (Canceled, Submitted, Closed)
 //Methods
+
+
+Closed Uçuştan 2 saat önce uçuş kapansın. 
+Submitted olması için son olarak uçuşun onayı verilir.
+Canceled olmak için 2 saat öncesinden iptal edilebilir olmalıdır. 
+
 
 AddFlight(Flight f);
 Cancel(string cancelationReason); // Kötü hava koşulları, Uçak Arızası, Pandemi vs...
+
 
 FlightCanceled Event
 cancelationReason

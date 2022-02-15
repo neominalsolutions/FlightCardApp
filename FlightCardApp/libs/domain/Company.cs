@@ -8,6 +8,13 @@ namespace FlightCardApp.libs.domain
 {
     public class Company:Entity
     {
+
+        public Company()
+        {
+
+        }
+ 
+
         public string Name { get; private set; } // Türk Hava yolları
         public string ShortCode { get; private set; } // THY
 

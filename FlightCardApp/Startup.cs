@@ -1,8 +1,10 @@
 using FlightCardApp.libs.core;
 using FlightCardApp.libs.infrasturcture;
+using FlightCardApp.libs.persistance;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -28,6 +30,11 @@ namespace FlightCardApp
             // IOC Container
 
             //services.AddScope
+
+            services.AddDbContext<AppDbContext>(opt =>
+            {
+                opt.UseSqlServer(Configuration.GetConnectionString("DefaultConnection"));
+            });
 
             services.AddSingleton<IDomainEventDispatcher, NetCoreEventDispatcher>();
             // Dispatcherlar performans amaçlý uygulama genelinde 1 kez instance alýnýr.
