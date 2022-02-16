@@ -48,6 +48,7 @@ ArrivalTime : DateTime  Varış zamanı
         public Airport To { get; private set; } // Nereye ADB
 
 
+     
 
         /// <summary>
         /// Varış zamanı

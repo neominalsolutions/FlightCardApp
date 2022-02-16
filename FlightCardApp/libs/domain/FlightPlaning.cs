@@ -45,6 +45,50 @@ namespace FlightCardApp.libs.domain
     public class FlightPlaning : Entity, IAggregateRoot
     {
 
+        private string _fromCode;
+
+        public string FromCode { get { return _fromCode; } private set {
+                _fromCode = value;
+            } }
+
+        private void SetFromCode()
+        {
+            if (ConnectionFlight)
+            {
+                var firstFlight = Flights.OrderBy(x => x.DepartureTime).Take(1).FirstOrDefault();
+
+                _fromCode = firstFlight?.From?.ShortCode;
+            }
+            else
+            {  // direkt uçuşlardaki from bilgisi 
+                var firstFlight = Flights.Take(1).FirstOrDefault(); // select top(1)
+
+                _fromCode = firstFlight?.From?.ShortCode;
+            }
+        }
+
+        private string _toCode; // field ile class içi değişiklik yaptık
+
+        public string ToCode{ get { return _toCode; } private set { _toCode = value; } } // field üzerinde hesaplanan değeri property'e bağladık
+
+        private void SetToCode()
+        {
+            // aktramalı uçuştaki From bilgisi
+            if (ConnectionFlight)
+            {
+                var lastFlight = Flights.OrderByDescending(x => x.ArrivalTime).Take(1).FirstOrDefault();
+
+                _toCode = lastFlight?.To?.ShortCode;
+            }
+            else
+            {  // direkt uçuşlardaki from bilgisi 
+                var lastFlight = Flights.Take(1).FirstOrDefault(); // select top(1)
+
+                _toCode = lastFlight?.To?.ShortCode;
+            }
+        }
+
+
         public FlightPlaning()
         {
 
@@ -158,6 +202,9 @@ namespace FlightCardApp.libs.domain
                 }
             }
 
+
+            SetFromCode();
+            SetToCode();
 
         }
 

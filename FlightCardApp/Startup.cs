@@ -1,4 +1,5 @@
 using FlightCardApp.libs.core;
+using FlightCardApp.libs.domain;
 using FlightCardApp.libs.infrasturcture;
 using FlightCardApp.libs.persistance;
 using Microsoft.AspNetCore.Builder;
@@ -37,6 +38,7 @@ namespace FlightCardApp
             });
 
             services.AddSingleton<IDomainEventDispatcher, NetCoreEventDispatcher>();
+            services.AddScoped<IFlighPlaningRepository, EFFlightPlaningRepository>();
             // Dispatcherlar performans amaçlý uygulama genelinde 1 kez instance alýnýr.
             services.AddControllersWithViews();
         }

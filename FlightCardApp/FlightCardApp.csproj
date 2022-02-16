@@ -21,7 +21,6 @@
 
   <ItemGroup>
     <Folder Include="libs\application\" />
-    <Folder Include="libs\persistance\repositories\" />
     <Folder Include="Models\" />
   </ItemGroup>
 
