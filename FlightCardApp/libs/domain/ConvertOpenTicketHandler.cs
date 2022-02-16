@@ -18,7 +18,7 @@ namespace FlightCardApp.libs.domain
         public void Handle(FlightCanceled @event)
         {
 
-            throw new NotImplementedException();
+            
         }
     }
 }

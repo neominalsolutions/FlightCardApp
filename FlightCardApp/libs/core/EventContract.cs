@@ -31,25 +31,25 @@ namespace FlightCardApp.libs.core
     /// Domain event handler, Eventen taşınan bilgileri alıp bir olay gerçekleştiğinde sistemin nasıl bir tepki verceğini belirlediğimiz sınıfımız.
     /// </summary>
     /// <typeparam name="TDomainEvent"></typeparam>
-    public interface IDomainEventHandler<in TDomainEvent> where TDomainEvent : IDomainEvent
+    public interface IDomainEventHandler<TDomainEvent> where TDomainEvent : IDomainEvent
     {
 
         void Handle(TDomainEvent @event);
     }
 
-    public static class DomainEvent
-    {
-        public static IDomainEventDispatcher Dispatcher { get; set; } 
+    //public static class DomainEvent
+    //{
+    //    public static IDomainEventDispatcher Dispatcher { get; set; } 
 
-        /// <summary>
-        /// Raise ile bu dipatcher'ın eventleri ayağa kaldırmasını yükseltmesini sağladık
-        /// </summary>
-        /// <typeparam name="TDomainEvent"></typeparam>
-        /// <param name="event"></param>
-        public static void Raise<TDomainEvent>(TDomainEvent @event) where TDomainEvent : IDomainEvent
-        {
-            Dispatcher.Dispatch(@event);
-        }
-    }
+    //    /// <summary>
+    //    /// Raise ile bu dipatcher'ın eventleri ayağa kaldırmasını yükseltmesini sağladık
+    //    /// </summary>
+    //    /// <typeparam name="TDomainEvent"></typeparam>
+    //    /// <param name="event"></param>
+    //    public static void Raise<TDomainEvent>(TDomainEvent @event) where TDomainEvent : IDomainEvent
+    //    {
+    //        Dispatcher.Dispatch(@event);
+    //    }
+    //}
 
 }

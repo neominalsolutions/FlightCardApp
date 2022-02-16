@@ -1,3 +1,5 @@
+using Autofac;
+using Autofac.Extensions.DependencyInjection;
 using FlightCardApp.libs.core;
 using FlightCardApp.libs.domain;
 using FlightCardApp.libs.infrasturcture;
@@ -9,6 +11,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Ninject;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -37,9 +40,46 @@ namespace FlightCardApp
                 opt.UseSqlServer(Configuration.GetConnectionString("DefaultConnection"));
             });
 
-            services.AddSingleton<IDomainEventDispatcher, NetCoreEventDispatcher>();
-            services.AddScoped<IFlighPlaningRepository, EFFlightPlaningRepository>();
+            //services.AddTransient<IDomainEventHandler<FlightCanceled>, ConvertOpenTicketHandler>();
+            //services.AddTransient<IDomainEventHandler<FlightCanceled>, FlightCanceledNotificationHandler>();
+
+            //services.AddTransient<IDomainEventDispatcher, NetCoreEventDispatcher>();
+            //services.AddScoped<IFlighPlaningRepository, EFFlightPlaningRepository>();
+            //services.AddScoped<IFlightTicketRepository, EFFlightTicketRepository>();
             // Dispatcherlar performans amaçlý uygulama genelinde 1 kez instance alýnýr.
+
+
+            // startup dosyamýzda sitemde event fýrlattýktan sonra tetiklenecek olan handlerlarý tanýmlýyoruz. // AddTransient yapalým
+
+
+
+            //var container = new StandardKernel();
+            //container.Bind<IDomainEventDispatcher, NinjectDomainEventDispatcher>();
+            //container.Bind<IDomainEventHandler<FlightCanceled>>().To<ConvertOpenTicketHandler>();
+            //container.Bind<IDomainEventHandler<FlightCanceled>>().To<FlightCanceledNotificationHandler>();
+            //container.Bind<IFlighPlaningRepository, EFFlightPlaningRepository>();
+            //container.Bind<IFlightTicketRepository, EFFlightTicketRepository>();
+            //container.Bind<AppDbContext>();
+
+
+            var containerBuilder = new ContainerBuilder();
+            //Register your own services within Autofac
+            containerBuilder.RegisterType<ConvertOpenTicketHandler>().As<IDomainEventHandler<FlightCanceled>>();
+            containerBuilder.RegisterType<FlightCanceledNotificationHandler>().As<IDomainEventHandler<FlightCanceled>>();
+            containerBuilder.RegisterType<EFFlightPlaningRepository>().As<IFlighPlaningRepository>();
+            containerBuilder.RegisterType<EFFlightTicketRepository>().As<IFlightTicketRepository>();
+            containerBuilder.RegisterType<NinjectDomainEventDispatcher>().As<IDomainEventDispatcher>();
+            //Put the framework services into Autofac
+            containerBuilder.Populate(services);
+
+            //Build and return the Autofac collection
+            var container = containerBuilder.Build();
+          
+
+
+
+
+
             services.AddControllersWithViews();
         }
 

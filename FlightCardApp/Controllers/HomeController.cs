@@ -114,8 +114,6 @@ namespace FlightCardApp.Controllers
             //configuration1 = configuration;
         }
         public IActionResult Index()
-        
-        
         {
 
             var company = new Company(name: " Türk havayolları ", shortCode: " thy ");

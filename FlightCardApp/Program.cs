@@ -1,9 +1,12 @@
 using FlightCardApp.libs.core;
+using FlightCardApp.libs.domain;
+using FlightCardApp.libs.infrasturcture;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using Ninject;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -16,10 +19,13 @@ namespace FlightCardApp
         public static void Main(string[] args)
         {
             IHost build = CreateHostBuilder(args).Build();
-            DomainEvent.Dispatcher = build.Services.GetRequiredService<IDomainEventDispatcher>();
+            //DomainEvent.Dispatcher = build.Services.GetRequiredService<IDomainEventDispatcher>();
             // Yani burada DomainEvent.Dispatcher propertysine sistemdeki NetrCoreEventDispacther referansýný verdik. uygulama genelinde artýk bu referans ile çalýþacaðýz.
 
             //DomainEvent.Raise<>(new test());
+
+            
+
             build.Run();
         }
 

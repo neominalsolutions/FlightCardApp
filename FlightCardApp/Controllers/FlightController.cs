@@ -11,13 +11,15 @@ namespace FlightCardApp.Controllers
 {
     public class FlightController : Controller
     {
-        private AppDbContext _db;
+        //private AppDbContext _db;
         private IFlighPlaningRepository _flighPlaningRepository;
+        private IFlightTicketRepository _flightTicketRepository;
 
-        public FlightController(AppDbContext db, IFlighPlaningRepository flighPlaningRepository)
+        public FlightController(IFlighPlaningRepository flighPlaningRepository, IFlightTicketRepository flightTicketRepository)
         {
-            _db = db;
+            //_db = db;
             _flighPlaningRepository = flighPlaningRepository;
+            _flightTicketRepository = flightTicketRepository;
         }
 
         /// <summary>
@@ -28,23 +30,49 @@ namespace FlightCardApp.Controllers
         /// <returns></returns>
         public IActionResult SelectFlight(string className, string code)
         {
+
+            var flightPlaning = _flighPlaningRepository.Find(code);
+
+            var flightTicket = new FlightTicket("mert alptekin", className, code, "mert.alptekin@neominal.com", flightPlaning.FlightDate);
+
+            var flightTicket2 = new FlightTicket("ali tan", className, code, "test@test.com", flightPlaning.FlightDate);
+
+            _flightTicketRepository.Add(flightTicket);
+            _flightTicketRepository.Add(flightTicket2);
+
+            _flightTicketRepository.Save();
+
+
             return View();
         }
 
 
         public IActionResult Cancel(string id)
         {
-            return Redirect("List");
+            var flightPlaning = _flighPlaningRepository.Find(id);
+            flightPlaning.FlightCanceled("Kötü hava koşulları");
+
+            _flighPlaningRepository.Save();
+
+            return RedirectToAction("List");
         }
 
         public IActionResult Submit(string id)
         {
-            return Redirect("List");
+            var flightPlaning =  _flighPlaningRepository.Find(id);
+            flightPlaning.FlightSubmit();
+            _flighPlaningRepository.Save();
+
+            return RedirectToAction("List");
         }
 
         public IActionResult Close(string id)
         {
-            return Redirect("List");
+            var flightPlaning = _flighPlaningRepository.Find(id);
+            flightPlaning.FlightClosed();
+            _flighPlaningRepository.Save();
+
+            return RedirectToAction("List");
         }
 
 
