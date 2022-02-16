@@ -45,6 +45,19 @@ namespace FlightCardApp.libs.domain
     public class FlightPlaning : Entity, IAggregateRoot
     {
 
+        public string TotalTravelTime
+        {
+            get
+            {
+                DateTime departureTime = Flights.OrderBy(x => x.DepartureTime).Take(1).FirstOrDefault().DepartureTime;
+
+                DateTime arrivalTime = Flights.OrderByDescending(x => x.ArrivalTime).Take(1).FirstOrDefault().ArrivalTime;
+
+                return TravelTimeCalculator.GetTravelTime(arrivalTime, departureTime);
+            }
+        }
+
+
         private string _fromCode;
 
         public string FromCode { get { return _fromCode; } private set {

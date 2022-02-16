@@ -1,0 +1,106 @@
+﻿
+@{
+    ViewData["Title"] = "List";
+}
+
+@model List<FlightPlaningDto>
+
+<h1>List</h1>
+
+
+<table class="table table-bordered table-striped">
+
+    <thead>
+        <tr>
+
+            <th>Kalkış</th>
+            <th>Süre</th>
+            <th>Varış</th>
+            <th>Fiyat</th>
+            <th>Durum</th>
+            <th>
+                Action
+            </th>
+        </tr>
+    </thead>
+
+    <tbody>
+        @foreach (var item in Model)
+        {
+
+
+
+        <tr>
+
+            @*<div class="panel-group">
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <h4 class="panel-title">
+                            <a data-toggle="collapse" href="#collapse1">Collapsible panel</a>
+                        </h4>
+                    </div>
+                    <div id="collapse1" class="panel-collapse collapse">
+                        <div class="panel-body">Panel Body</div>
+                        <div class="panel-footer">Panel Footer</div>
+                    </div>
+                </div>
+            </div>*@
+
+            <td>
+                <div>
+                    @item.DepartureTime
+                </div>
+                <div>
+                    @item.From
+                </div>
+            </td>
+            <td>
+                <div>
+
+                    @item.TravelTime
+                </div>
+                <div>
+                    <a data-toggle="collapse" href="#panel_@item.Id">@item.ConnectionType</a>
+                </div>
+                <div id="panel_@item.Id" class="panel-collapse collapse">
+                    <div class="panel-body">
+
+                        @foreach (var flight in item.Flights)
+                        {
+                            <span>(@flight.From) @flight.DepartureTime -  (@flight.To)@flight.ArrivalTime</span>
+                        }
+
+
+                    </div>
+           
+                </div>
+            </td>
+            <td>
+                <div>
+                    @item.ArrivalTime
+                </div>
+                <div>
+                    @item.To
+                </div>
+            </td>
+            <td>
+                @foreach (var price in item.Prices)
+                {
+                    <div>
+                        @price.Price TL (@price.Type) <a class="btn btn-warning" asp-controller="Flight" asp-action="SelectFlight" asp-route-className="@price.Type" asp-route-code="@item.Id">Seç</a>
+                    </div>
+                }
+            </td>
+            <td>
+                @item.StatusText
+            </td>
+            <td>
+                <a class="btn btn-success" asp-controller="Flight" asp-action="Submit" asp-route-id="@item.Id">Submit Yap</a>
+                <a class="btn btn-danger" asp-controller="Flight" asp-action="Cancel" asp-route-id="@item.Id">Cancel Yap</a>
+                <a class="btn btn-warning" asp-controller="Flight" asp-action="Close" asp-route-id="@item.Id">Close Yap</a>
+            </td>
+        </tr>
+        }
+    </tbody>
+
+</table>

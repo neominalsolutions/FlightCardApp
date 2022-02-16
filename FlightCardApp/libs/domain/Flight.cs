@@ -67,22 +67,7 @@ ArrivalTime : DateTime  Varış zamanı
         {
             get
             {
-                var hourDiff = (ArrivalTime - DepartureTime).Hours;
-                var minuteDiff = (ArrivalTime - DepartureTime).Minutes;
-
-                if(hourDiff > 0 && minuteDiff > 0) 
-                {
-                    return $"{hourDiff} saat {minuteDiff} dakika"; // 3 saat 45 dakika
-                }
-                else if(hourDiff> 0 && minuteDiff == 0)
-                {
-                    return $"{hourDiff} saat"; // 3 saat
-                }
-                else
-                {
-                    return $"{minuteDiff} dakika"; // 45 dk
-                }
-                    
+                return TravelTimeCalculator.GetTravelTime(ArrivalTime, DepartureTime);
             }
         }
 
