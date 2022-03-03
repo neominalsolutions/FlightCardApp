@@ -15,6 +15,7 @@ using Ninject;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using System.Threading.Tasks;
 
 namespace FlightCardApp
@@ -29,63 +30,59 @@ namespace FlightCardApp
         public IConfiguration Configuration { get; }
 
         // This method gets called by the runtime. Use this method to add services to the container.
+
+
+     
+
         public void ConfigureServices(IServiceCollection services)
         {
-            // IOC Container
+            // add services
 
-            //services.AddScope
+            // return third-party tool's class which is implemented IServiceProvider
 
+            services.AddControllersWithViews().AddControllersAsServices();
             services.AddDbContext<AppDbContext>(opt =>
             {
                 opt.UseSqlServer(Configuration.GetConnectionString("DefaultConnection"));
             });
 
-            //services.AddTransient<IDomainEventHandler<FlightCanceled>, ConvertOpenTicketHandler>();
-            //services.AddTransient<IDomainEventHandler<FlightCanceled>, FlightCanceledNotificationHandler>();
 
-            //services.AddTransient<IDomainEventDispatcher, NetCoreEventDispatcher>();
-            //services.AddScoped<IFlighPlaningRepository, EFFlightPlaningRepository>();
-            //services.AddScoped<IFlightTicketRepository, EFFlightTicketRepository>();
-            // Dispatcherlar performans amaçlý uygulama genelinde 1 kez instance alýnýr.
+            //var builder = new ContainerBuilder();
 
+            
 
-            // startup dosyamýzda sitemde event fýrlattýktan sonra tetiklenecek olan handlerlarý tanýmlýyoruz. // AddTransient yapalým
+            //IContainer container = builder.Build();
 
 
+            //var handlers = container.Resolve <IEnumerable<IDomainEventHandler<FlightCanceled>>>();
 
-            //var container = new StandardKernel();
-            //container.Bind<IDomainEventDispatcher, NinjectDomainEventDispatcher>();
-            //container.Bind<IDomainEventHandler<FlightCanceled>>().To<ConvertOpenTicketHandler>();
-            //container.Bind<IDomainEventHandler<FlightCanceled>>().To<FlightCanceledNotificationHandler>();
-            //container.Bind<IFlighPlaningRepository, EFFlightPlaningRepository>();
-            //container.Bind<IFlightTicketRepository, EFFlightTicketRepository>();
-            //container.Bind<AppDbContext>();
+            //foreach (var handler in handlers)
+            //{
+            //    handler.Handle(new FlightCanceled("1","cancel"));
+            //}
 
+            //return new AutofacServiceProvider(container);
 
-            var containerBuilder = new ContainerBuilder();
-            //Register your own services within Autofac
-            containerBuilder.RegisterType<ConvertOpenTicketHandler>().As<IDomainEventHandler<FlightCanceled>>();
-            containerBuilder.RegisterType<FlightCanceledNotificationHandler>().As<IDomainEventHandler<FlightCanceled>>();
-            containerBuilder.RegisterType<EFFlightPlaningRepository>().As<IFlighPlaningRepository>();
-            containerBuilder.RegisterType<EFFlightTicketRepository>().As<IFlightTicketRepository>();
-            containerBuilder.RegisterType<NinjectDomainEventDispatcher>().As<IDomainEventDispatcher>();
-            //Put the framework services into Autofac
-            containerBuilder.Populate(services);
-
-            //Build and return the Autofac collection
-            var container = containerBuilder.Build();
-          
-
-
-
-
-
-            services.AddControllersWithViews();
         }
+
+  
+
+        //public void ConfigureContainer(ContainerBuilder builder)
+        //{
+        //    // Register your own things directly with Autofac here. Don't
+        //    // call builder.Populate(), that happens in AutofacServiceProviderFactory
+        //    // for you.
+        //    builder.RegisterModule(new RegisterModule());
+        //}
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
+
+            //AutofacContainer = app.ApplicationServices.GetAutofacRoot();
+
+           
+
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();

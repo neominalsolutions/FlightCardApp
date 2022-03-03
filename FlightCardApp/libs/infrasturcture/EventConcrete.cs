@@ -1,74 +1,62 @@
 ﻿using Autofac;
 using FlightCardApp.libs.core;
+using FlightCardApp.libs.domain;
+using Microsoft.CSharp.RuntimeBinder;
 using Microsoft.Extensions.DependencyInjection;
 using Ninject;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using System.Threading.Tasks;
 
 namespace FlightCardApp.libs.infrasturcture
 {
 
-    public class NinjectDomainEventDispatcher : IDomainEventDispatcher
+    public class AutofacDomainEventDispatcher : IDomainEventDispatcher
     {
-        private readonly IContainer _kernel;
+        // Autofac üzerinde register olan arkadaşlarımızı IComponentContext interface ile Autofacten gelir ServiceProvider gibi çalışır Resolve et
+        private readonly IComponentContext _context;
 
-        public NinjectDomainEventDispatcher(IContainer kernel)
+        public AutofacDomainEventDispatcher(IComponentContext context)
         {
-            _kernel = kernel;
+            _context = context;
         }
 
         public void Dispatch<TDomainEvent>(TDomainEvent @event) where TDomainEvent : IDomainEvent
         {
-            foreach (var handler in _kernel.Resolve<IEnumerable<IDomainEventHandler<TDomainEvent>>>())
+           
+            var handlerType = typeof(IDomainEventHandler<>).MakeGenericType(@event.GetType());
+            // bir event birden fazla Handler çalıştırabilir.
+            var handlersCollectionType = typeof(IEnumerable<>).MakeGenericType(handlerType);
+
+            try
             {
-                handler.Handle(@event);
-            }
-        }
+                //c# 4.0 ile dynamic geldi.
+                dynamic handlers = _context.Resolve(handlersCollectionType);
+                
 
-      
-    }
+                if (handlers == null)
+                    return;
 
-
-    public class NetCoreEventDispatcher : IDomainEventDispatcher
-    {
-
-        /// <summary>
-        /// startup dosyasında servislere erişmek için service provider interface kullandık
-        /// </summary>
-        private readonly IServiceProvider _serviceProvider;
-
-        /// <summary>
-        /// DIP ile servicelere ulaştık
-        /// </summary>
-        /// <param name="serviceProvider"></param>
-        public NetCoreEventDispatcher(IServiceProvider serviceProvider)
-        {
-            _serviceProvider = serviceProvider;
-        }
-
-        public void Dispatch<TDomainEvent>(TDomainEvent @event) where TDomainEvent : IDomainEvent
-        {
-            if (_serviceProvider != null)
-            {
-
-                // eğer handlerlar içerisinde net core tatrafında scoped tipinde servis tanışlanmış ise scope servisler için bu kod bloğunu yazdık. Yoksa service provider ilgili handlera erişemez. Exception fırlat.
-                using (var scope = _serviceProvider.CreateScope())
+                foreach (dynamic handler in handlers)
                 {
-                    var @object = _serviceProvider.GetService<IDomainEventHandler<TDomainEvent>>();
+                    dynamic dynamicEvent = @event;
+                    handler.Handle(dynamicEvent);
 
-                    foreach (var handler in _serviceProvider.GetServices<IDomainEventHandler<TDomainEvent>>())
-                    {
-                        // IDomainEventHandler<TDomainEvent>> bu interfaceden implemente olmuş  startudaki tüm servicleri bul.
-                        // araya girip handlerların dispatcher üzerinden tetiklenmesi için kod yazdık.
-                        handler.Handle(@event);
-                    }
                 }
             }
+            catch (RuntimeBinderException)
+            {
+                    
+                throw new RuntimeBinderException("Dynamic tipine çeviriken bir hata oluştu");
+            }
 
+           
         }
 
-
+        
     }
+
+    
 }

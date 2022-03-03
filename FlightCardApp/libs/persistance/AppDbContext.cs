@@ -12,17 +12,19 @@ namespace FlightCardApp.libs.persistance
     {
         private readonly IDomainEventDispatcher _domainEventDispatcher;
 
-        public AppDbContext()
-        {
 
 
-        }
-      
-
-        public AppDbContext(DbContextOptions<AppDbContext> dbContextOptions, IDomainEventDispatcher domainEventDispatcher) :base(dbContextOptions)
+        public AppDbContext(DbContextOptions<AppDbContext> dbContextOptions, IDomainEventDispatcher domainEventDispatcher) : base(dbContextOptions)
         {
             _domainEventDispatcher = domainEventDispatcher;
         }
+
+
+
+        //public AppDbContext(DbContextOptions<AppDbContext> dbContextOptions, IDomainEventDispatcher domainEventDispatcher) :base(dbContextOptions)
+        //{
+        //    _domainEventDispatcher = domainEventDispatcher;
+        //}
 
         public DbSet<FlightPlaning> FlightPlanings { get; set; }
         public DbSet<Company> Companies { get; set; }
@@ -59,10 +61,36 @@ namespace FlightCardApp.libs.persistance
 
         public override int SaveChanges()
         {
-            _dispatchDomainEvents();
-            // kayıt işlemi öncesinde ilgili eventleri çalıştır.
+            // eventlerin tek bir transaction scope çalışmasını sağladık.
+            using (var tra = this.Database.BeginTransaction())
+            {
+                try
+                {
 
-            return base.SaveChanges();
+                    _dispatchDomainEvents();
+                    var result = base.SaveChanges();
+             
+                    tra.Commit();
+
+                    return result;
+                }
+                catch (Exception)
+                {
+                    tra.Rollback();
+
+                    throw new Exception("Veri kaydedilirken bir hata meydana geldi");
+                }
+
+            }
+
+         
+            
+
+
+            
+
+           
+            // kayıt işlemi öncesinde ilgili eventleri çalıştır.
         }
 
 

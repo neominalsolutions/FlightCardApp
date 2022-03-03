@@ -371,7 +371,7 @@ namespace FlightCardApp.libs.domain
         /// Operasyon amiri tarafından onaylanan veya onaylanmayan uçuşlarda iptal politikası uygulanabilir.
         /// </summary>
         public void FlightCanceled(string cancelationReason)
-        {
+       {
 
             if (Status == FlightPlaningStatus.Submitted)
             {

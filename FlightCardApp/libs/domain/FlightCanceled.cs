@@ -11,10 +11,11 @@ namespace FlightCardApp.libs.domain
     /// </summary>
     public class FlightCanceled: IDomainEvent
     {
-        public string FlightPlaningId { get; private set; }
-        public string CancelationReason { get; private set; }
+        public string FlightPlaningId { get; set; }
+        public string CancelationReason { get; set; }
 
-        public FlightCanceled(string flightPlaningId,string cancelationReason)
+
+        public FlightCanceled(string flightPlaningId, string cancelationReason)
         {
             FlightPlaningId = flightPlaningId;
             CancelationReason = cancelationReason;

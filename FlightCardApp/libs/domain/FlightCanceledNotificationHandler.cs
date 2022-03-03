@@ -9,14 +9,8 @@ namespace FlightCardApp.libs.domain
     /// <summary>
     /// Bu uçuş ile ilgili bilet satın alan kişilere mail atar.
     /// </summary>
-    public class FlightCanceledNotificationHandler :IDomainEventHandler<FlightCanceled>
+    public class FlightCanceledNotificationHandler: IDomainEventHandler<FlightCanceled>
     {
-    //    private IEmailService _emailService;
-
-        //public FlightCanceledNotificationHandler(IEmailService emailService)
-        //{
-        //    _emailService = emailService;
-        //}
 
         public void Handle(FlightCanceled @event)
         {

@@ -1,6 +1,9 @@
+using Autofac;
+using Autofac.Extensions.DependencyInjection;
 using FlightCardApp.libs.core;
 using FlightCardApp.libs.domain;
 using FlightCardApp.libs.infrasturcture;
+using Microsoft.AspNetCore;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -18,22 +21,20 @@ namespace FlightCardApp
     {
         public static void Main(string[] args)
         {
-            IHost build = CreateHostBuilder(args).Build();
-            //DomainEvent.Dispatcher = build.Services.GetRequiredService<IDomainEventDispatcher>();
-            // Yani burada DomainEvent.Dispatcher propertysine sistemdeki NetrCoreEventDispacther referansýný verdik. uygulama genelinde artýk bu referans ile çalýþacaðýz.
-
-            //DomainEvent.Raise<>(new test());
-
-            
-
-            build.Run();
+            CreateHostBuilder(args).Build().Run();
         }
 
         public static IHostBuilder CreateHostBuilder(string[] args) =>
-            Host.CreateDefaultBuilder(args)
-                .ConfigureWebHostDefaults(webBuilder =>
-                {
-                    webBuilder.UseStartup<Startup>();
-                });
+          Host.CreateDefaultBuilder(args)
+            .UseServiceProviderFactory(new AutofacServiceProviderFactory())
+            .ConfigureContainer<ContainerBuilder>(builder =>
+            {
+                builder.RegisterModule(new RegisterModule());
+            })
+            .ConfigureWebHostDefaults(webBuilder =>
+            {
+                  webBuilder.UseStartup<Startup>();
+            });
+          
     }
 }
